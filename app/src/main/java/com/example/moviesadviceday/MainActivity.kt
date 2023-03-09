@@ -1,5 +1,6 @@
 package com.example.moviesadviceday
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -8,6 +9,7 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -45,20 +47,53 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun ListFilms() {
-    LazyColumn() {
-        items(filmsInfo) {
-            CardFilm(film = it)
+    Scaffold(
+        topBar = { TopBar() },
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(8.dp)
+    ) {
+        LazyColumn(
+            modifier =
+            Modifier.background(MaterialTheme.colors.background)
+        ) {
+            items(filmsInfo) {
+                CardFilm(film = it)
+            }
         }
     }
+
 }
 
+/**
+ * Функция топ бара
+ */
+@Composable
+fun TopBar(modifier: Modifier = Modifier) {
+    Row(
+        horizontalArrangement = Arrangement.Center,
+        modifier = modifier
+            .fillMaxWidth()
+            .size(56.dp),
+    ) {
+        Text(text = stringResource(R.string.app_name),
+        style = MaterialTheme.typography.h2)
+        Image(
+            painter = painterResource(R.drawable.icon_film_list),
+            contentDescription = null,
+            modifier = modifier.size(20.dp)
+        )
+
+    }
+}
 
 /**
  * Функция карточки
  * @param film data. Данные и их описание
- * @param Обычный модификатор
+ * @param  modifier Обычный модификатор
  */
 @Composable
 fun CardFilm(film: FilmsData, modifier: Modifier = Modifier) {
@@ -155,6 +190,14 @@ private fun IconDescription(
 @Composable
 fun DefaultPreview() {
     MoviesAdviceDayTheme {
-        CardFilm(film = FilmsData(R.drawable.spaderman_two, R.string.sp2, null))
+        ListFilms()
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun DefaultPreviewDark() {
+    MoviesAdviceDayTheme(true) {
+        ListFilms()
     }
 }
